@@ -243,7 +243,7 @@ def image2emotion(imageData):
 
         print(querytext)
 
-        images = getImages(querytext)
+        images = getImages("bremen")
 
         tileURLs = {}
 
@@ -344,7 +344,7 @@ FORM = """
 
                     <h3> could not detect face, try again </h3>
                 {% else %}
-
+                    <div id="startImg">
                     {% for tile in tile_urls %}
 
                         {% if loop.index == 1 or loop.index == 4 or loop.index == 7 %}
@@ -352,8 +352,20 @@ FORM = """
                         {% endif %}
 
                         <div class="col-md-4">
+                        <a href="javascript:DoPost{{ loop.index }}()">
                         <img src="{{ tile_urls[tile] }}" width="100%" height="120px">
+                        </a>
                         </div>
+
+                        <script>
+
+                        function DoPost{{ loop.index }}(){
+                            $('body').load($(location).attr('href'), {imageURL: "{{ tile }}" }, function() {
+                                buttonListener();
+                            });
+                        }
+
+                        </script>
 
                         {% if loop.index == 3 or loop.index == 6 or loop.index == 9 %}
                             </div>
@@ -361,6 +373,7 @@ FORM = """
 
                     {% endfor %}
 
+                    </div>
                 {% endif %}
 
             {% else %}
@@ -375,8 +388,13 @@ FORM = """
 
             <script>
 
-                // Put event listeners into place
-                window.addEventListener("DOMContentLoaded", function() {
+
+
+
+
+                function buttonListener() {
+
+
                 // Grab elements, create settings, etc.
                 var canvas = document.getElementById("canvas"),
                 context = canvas.getContext("2d"),
@@ -404,8 +422,8 @@ FORM = """
                     }, errBack);
                 }
 
-
                 // Triger enable cam
+
                 document.getElementById("cam").addEventListener("click", function() {
 
                         $('#cam').text("Take Snap");
@@ -425,12 +443,23 @@ FORM = """
                                 var canvasData = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
 
                                 //$.post($(location).attr('href'), { imageData: canvasData})
-                                $('body').load($(location).attr('href'), { imageData: canvasData });
+                                $('body').load($(location).attr('href'), { imageData: canvasData }, function() {
+                                    buttonListener();
+                                });
 
-                        });
                         }, false);
 
                 }, false);
+
+                }
+
+                // Put event listeners into place
+                window.addEventListener("DOMContentLoaded", function() {
+
+                buttonListener();
+
+                });
+
 
 
 
