@@ -39,8 +39,6 @@ def processRequest(url, json, data, headers, params):
     retries = 0
     result = None
 
-    print(data)
-
     while True:
 
 
@@ -238,8 +236,6 @@ def image2emotion(imageData):
 
     json = ""
     data = base64.b64decode(imageData)
-
-    print(len(data))
 
     result = processRequest(_emotionURL, json, data, headers, params)
 
