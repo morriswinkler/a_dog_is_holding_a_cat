@@ -275,16 +275,17 @@ class StoreHandler(BaseHTTPRequestHandler):
         if imageData:
             tileURLs = {}
             tileURLs['http://upload.wikimedia.org/wikipedia/commons/f/f1/Bremen-Vegesack.JPG'] = 'https://tse2.mm.bing.net/th?id=OIP.M3ddb9dcd5b05edbf6cb8254739b15925o0&pid=Api'
-            titeURLs['http://tasteofwonderland.files.wordpress.com/2010/09/bremen.jpg']='https://tse2.mm.bing.net/th?id=OIP.Ma84d322c1b0e51bfd1ac64c4b3ef6588H0&pid=Api'
-            titeURLs['http://www.bilderfotos.com/data/media/27/bremen_schcne.jpg']='https://tse1.mm.bing.net/th?id=OIP.M0e5ccfec129e8f429c33eea3005e56baH0&pid=Api'
-            titeURLs['http://upload.wikimedia.org/wikipedia/commons/c/cd/RathausBremen-01-2.jpg']='https://tse3.mm.bing.net/th?id=OIP.M825ecc88b0fe9b1b1a9450fd66073e3fH0&pid=Api'
-            titeURLs['http://www.bremen-tourism.de/data/mediadb/cms_pictures/%7Ba2d65523-a11a-962e-8602-ae8954670088%7D.jpeg']='https://tse2.mm.bing.net/th?id=OIP.M9710ddbd4d5e82a77e56551b6d8b6dcco0&pid=Api'
-            titeURLs['http://upload.wikimedia.org/wikipedia/commons/d/d8/Gerichtsgebaeude_Bremen_1900.jpg']='https://tse2.mm.bing.net/th?id=OIP.M4dafd4aa1117f834788676bb99df9114o0&pid=Api'
-            titeURLs['http://biletim.de/Files/Images/Tours/bremen-gunluk-tur/1280x.jpg']='https://tse3.mm.bing.net/th?id=OIP.Me273056d5486ebd27eca54b975399d6ao0&pid=Api'
-            titeURLs['https://upload.wikimedia.org/wikipedia/commons/1/1b/Bremen-rathaus-dom-buergerschaft.jpg']='https://tse4.mm.bing.net/th?id=OIP.Mbce7a8627d794f96f0210c4ff2ca0719o0&pid=Api'
-            titeURLs['http://www.big-bremen.de/sixcms/media.php/52/marktplatz_kontorhaus.jpg']='https://tse1.mm.bing.net/th?id=OIP.M92662810bc4c363b970e7ff6aa062a72o0&pid=Api'
+            tileURLs['http://tasteofwonderland.files.wordpress.com/2010/09/bremen.jpg']='https://tse2.mm.bing.net/th?id=OIP.Ma84d322c1b0e51bfd1ac64c4b3ef6588H0&pid=Api'
+            tileURLs['http://www.bilderfotos.com/data/media/27/bremen_schcne.jpg']='https://tse1.mm.bing.net/th?id=OIP.M0e5ccfec129e8f429c33eea3005e56baH0&pid=Api'
+            tileURLs['http://upload.wikimedia.org/wikipedia/commons/c/cd/RathausBremen-01-2.jpg']='https://tse3.mm.bing.net/th?id=OIP.M825ecc88b0fe9b1b1a9450fd66073e3fH0&pid=Api'
+            tileURLs['http://www.bremen-tourism.de/data/mediadb/cms_pictures/%7Ba2d65523-a11a-962e-8602-ae8954670088%7D.jpeg']='https://tse2.mm.bing.net/th?id=OIP.M9710ddbd4d5e82a77e56551b6d8b6dcco0&pid=Api'
+            tileURLs['http://upload.wikimedia.org/wikipedia/commons/d/d8/Gerichtsgebaeude_Bremen_1900.jpg']='https://tse2.mm.bing.net/th?id=OIP.M4dafd4aa1117f834788676bb99df9114o0&pid=Api'
+            tileURLs['http://biletim.de/Files/Images/Tours/bremen-gunluk-tur/1280x.jpg']='https://tse3.mm.bing.net/th?id=OIP.Me273056d5486ebd27eca54b975399d6ao0&pid=Api'
+            tileURLs['https://upload.wikimedia.org/wikipedia/commons/1/1b/Bremen-rathaus-dom-buergerschaft.jpg']='https://tse4.mm.bing.net/th?id=OIP.Mbce7a8627d794f96f0210c4ff2ca0719o0&pid=Api'
+            tileURLs['http://www.big-bremen.de/sixcms/media.php/52/marktplatz_kontorhaus.jpg']='https://tse1.mm.bing.net/th?id=OIP.M92662810bc4c363b970e7ff6aa062a72o0&pid=Api'
             template = Template(FORM)
-            response = template.render(description="YOU", tileURLs=tileURLs)
+            print("ll")
+            response = template.render(description="your face", tile_urls=tileURLs)
 
         self.respond(response)
 
@@ -336,19 +337,24 @@ FORM = """
             <div class="col-md-6" style="text-align:center">
             {% if image_url %}
                 <img id="startImg" src="{{ image_url }}" class="img-rounded" width="auto" height="400px">
-            {% else if tile_url%}
-                {% for tile in tiles_url %}
+            {% elif tile_urls %}
 
-                {%% if loop.index == 1 or loop.index == 4 or loop.index == 7 }
-                <div class="row">
-                {% endif %}
+                {% for tile in tile_urls %}
 
+                    {% if loop.index == 1 or loop.index == 4 or loop.index == 7 %}
+                        <div class="row" style="padding-bottom: 10px;">
+                    {% endif %}
 
-                {%% if loop.index == 1 or loop.index == 4 or loop.index == 7 }
-                </div>
-                {% endif %}
+                    <div class="col-md-4">
+                    <img src="{{ tile_urls[tile] }}" width="100%" height="120px">
+                    </div>
+
+                    {% if loop.index == 3 or loop.index == 6 or loop.index == 9 %}
+                        </div>
+                    {% endif %}
 
                 {% endfor %}
+
             {% else %}
                 <img id="startImg" src="https://i.imgur.com/HqtEkEl.gif" class="img-rounded" width="auto" height="400px">
             {% endif %}
@@ -410,7 +416,8 @@ FORM = """
 
                                 var canvasData = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
 
-                                $.post($(location).attr('href'), { imageData: canvasData})
+                                //$.post($(location).attr('href'), { imageData: canvasData})
+                                $('body').load($(location).attr('href'), { imageData: canvasData });
 
                         });
                         }, false);
@@ -458,7 +465,7 @@ FORM = """
                     <div class="col-md-12">
 
                         <h5>This image can be described as:</h5>
-                        {% if image_url %}
+                        {% if image_url or tile_urls %}
                         <h4 style="text-align:center"> "{{ description }}" </h4>
                         {% else %}
                         <h4 style="text-align:center"> "a picture of herself in a mirror" </h4>
