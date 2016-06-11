@@ -237,7 +237,7 @@ def image2emotion(imageData):
 
     result = processRequest(_emotionURL, json, data, headers, params)
 
-    if result == None or len(result) > 0:
+    if result != None and len(result) > 0:
 
         print(result[0]['scores'])
 
