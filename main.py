@@ -321,9 +321,12 @@ FORM = """
             <img src="{{ image_url }}" class="img-rounded" width="auto" height="400px">
             {% else %}
 
+            <img id="startImg" src="https://i.imgur.com/HqtEkEl.gif" class="img-rounded" width="auto" height="400px">
             <canvas id="canvas" width="533px" height="400px" style="display: none;"></canvas>
-            <video id="video" width="auto" height="400px" autoplay="" src="blob:https%3A//davidwalsh.name/d4dfad42-b44c-4c78-968e-8321f3ed4ab3"></video>
-            <button id="snap" class="btn btn-default pull-right">Snap Photo</button>
+            <video id="video" width="auto" height="400px" autoplay="" style="display: none;"></video>
+
+
+
 
             <script>
 
@@ -356,21 +359,34 @@ FORM = """
                     }, errBack);
                 }
 
-                // Trigger photo take
-                document.getElementById("snap").addEventListener("click", function() {
 
-                        $('#video').hide();
-                        //$('#canvas').width($('#video').width());
-                        //$('#canvas').height(400);
-                        $('#canvas').show();
-                        context.drawImage(video, 0, 0, 533, 400);
+                // Triger enable cam
+                document.getElementById("cam").addEventListener("click", function() {
 
-                        var canvasData = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
+                        $('#cam').text("Take Snap");
+                        $('#cam').attr("id", "snap");
+                        $('#startImg').hide();
+                        $('#video').show();
 
-                        $.post($(location).attr('href'), { imageData: canvasData})
+                         // Trigger photo take
+                        document.getElementById("snap").addEventListener("click", function() {
 
-                });
+                                $('#video').hide();
+                                //$('#canvas').width($('#video').width());
+                                //$('#canvas').height(400);
+                                $('#canvas').show();
+                                context.drawImage(video, 0, 0, 533, 400);
+
+                                var canvasData = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
+
+                                $.post($(location).attr('href'), { imageData: canvasData})
+
+                        });
+                        }, false);
+
                 }, false);
+
+
 
                 </script>
 
@@ -411,6 +427,7 @@ FORM = """
 
                     <div class="col-md-12" style="height:30px;"></div>
 
+
                     <div class="col-md-12">
 
                         <h5>This image can be described as:</h5>
@@ -433,8 +450,9 @@ FORM = """
                                 <input type="text" class="form-control" id="exampleInputName2" placeholder="https://i.imgur.com/HqtEkEl.gif" name="imageURL">
                             </div>
                             <button type="submit" class="btn btn-default pull-right">Go</button>
-                        </form>
 
+                        </form>
+                            <button id="cam" class="btn btn-default pull-left">Enable Cam</button>
                     </div>
 
                 </div>
