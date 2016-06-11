@@ -195,7 +195,7 @@ def getTextForEmotion(emotionlist):
     sorted_hashtags = sorted(hashtags.items(), key=operator.itemgetter(1), reverse=True)
 
     resultstring = ""
-    for hash in sorted_hashtags[1:5]:
+    for hash in sorted_hashtags[1:7]:
         resultstring = resultstring + " OR " + hash[0]
 
     return resultstring.strip()[3:]
