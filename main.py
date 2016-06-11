@@ -241,7 +241,59 @@ FORM = """
             {% if image_url %}
             <img src="{{ image_url }}" class="img-rounded" width="auto" height="400px">
             {% else %}
-            <img src="https://i.imgur.com/HqtEkEl.gif" class="img-rounded" width="auto" height="400px">
+
+            <canvas id="canvas" width="533px" height="400px" style="display: none;"></canvas>
+            <video id="video" width="auto" height="400px" autoplay="" src="blob:https%3A//davidwalsh.name/d4dfad42-b44c-4c78-968e-8321f3ed4ab3"></video>
+            <button id="snap" class="btn btn-default pull-right">Snap Photo</button>
+
+            <script>
+
+                // Put event listeners into place
+                window.addEventListener("DOMContentLoaded", function() {
+                // Grab elements, create settings, etc.
+                var canvas = document.getElementById("canvas"),
+                context = canvas.getContext("2d"),
+                video = document.getElementById("video"),
+                videoObj = { "video": true },
+                errBack = function(error) {
+                    console.log("Video capture error: ", error.code);
+                };
+
+                // Put video listeners into place
+                if(navigator.getUserMedia) { // Standard
+                    navigator.getUserMedia(videoObj, function(stream) {
+                    video.src = stream;
+                    video.play();
+                    }, errBack);
+                } else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
+                    navigator.webkitGetUserMedia(videoObj, function(stream){
+                    video.src = window.webkitURL.createObjectURL(stream);
+                    video.play();
+                    }, errBack);
+                } else if(navigator.mozGetUserMedia) { // WebKit-prefixed
+                    navigator.mozGetUserMedia(videoObj, function(stream){
+                    video.src = window.URL.createObjectURL(stream);
+                    video.play();
+                    }, errBack);
+                }
+
+                // Trigger photo take
+                document.getElementById("snap").addEventListener("click", function() {
+
+                        $('#video').hide();
+                        //$('#canvas').width($('#video').width());
+                        //$('#canvas').height(400);
+                        $('#canvas').show();
+                        context.drawImage(video, 0, 0, 533, 400);
+
+                });
+                }, false);
+
+                </script>
+
+
+
+            <!-- img src="https://i.imgur.com/HqtEkEl.gif" class="img-rounded" width="auto" height="400px" -->
             {% endif %}
             </div>
 
