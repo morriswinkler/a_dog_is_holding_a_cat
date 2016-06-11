@@ -169,9 +169,11 @@ def image2song(urlImage):
     else:
         return "no song found", imageDescription
 
-def getTextForEmotion(emotion):
+def getTextForEmotion(emotionlist):
 
-    params  = {'q' : emotion, 'count': 1000}
+    sorted_emotion = sorted(emotionlist.items(), key=operator.itemgetter(1), reverse=True)
+
+    params  = {'q' : sorted_emotion[0][0], 'count': 1000}
     headers = dict()
 
     result = processRequestGet(_loklakURL, headers, params )
@@ -212,15 +214,12 @@ def getImages(queryString):
     accentColor
     """
 
-    params = { "q" : queryString, "count": 15, "ImageType": "Photo", "SafeSearch": "Off"}
+    params = { "q" : queryString, "count": 9, "ImageType": "Photo", "SafeSearch": "Off"}
     headers = dict()
     headers['Ocp-Apim-Subscription-Key'] = _searchKey
     headers['Content-Type'] = 'application/json'
 
     result = processRequestGet(_bingURL, headers, params )
-
-    imageresults = {}
-
 
     return result['value']
 
@@ -238,13 +237,19 @@ def image2emotion(imageData):
 
     print(result[0]['scores'])
 
-    j = result[0]['scores']
+    querytext = getTextForEmotion(result[0]['scores'])
+    print(querytext)
 
-    for k,v in j.iteritems():
-        if v > 0.5:
-            print(k)
+    images = getImages("Bremen")
 
-    return image2song('http://i.imgur.com/fX5WZxD.jpg')
+    tileURLs = {}
+
+    for image in images:
+        tileURLs[image['contentUrl']] = image['thumbnailUrl']
+
+    print(tileURLs)
+
+    return tileURLs
 
 class StoreHandler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -273,16 +278,8 @@ class StoreHandler(BaseHTTPRequestHandler):
             response = template.render(description=desc, song_url=res, image_url=imageURL)
 
         if imageData:
-            tileURLs = {}
-            tileURLs['http://upload.wikimedia.org/wikipedia/commons/f/f1/Bremen-Vegesack.JPG'] = 'https://tse2.mm.bing.net/th?id=OIP.M3ddb9dcd5b05edbf6cb8254739b15925o0&pid=Api'
-            tileURLs['http://tasteofwonderland.files.wordpress.com/2010/09/bremen.jpg']='https://tse2.mm.bing.net/th?id=OIP.Ma84d322c1b0e51bfd1ac64c4b3ef6588H0&pid=Api'
-            tileURLs['http://www.bilderfotos.com/data/media/27/bremen_schcne.jpg']='https://tse1.mm.bing.net/th?id=OIP.M0e5ccfec129e8f429c33eea3005e56baH0&pid=Api'
-            tileURLs['http://upload.wikimedia.org/wikipedia/commons/c/cd/RathausBremen-01-2.jpg']='https://tse3.mm.bing.net/th?id=OIP.M825ecc88b0fe9b1b1a9450fd66073e3fH0&pid=Api'
-            tileURLs['http://www.bremen-tourism.de/data/mediadb/cms_pictures/%7Ba2d65523-a11a-962e-8602-ae8954670088%7D.jpeg']='https://tse2.mm.bing.net/th?id=OIP.M9710ddbd4d5e82a77e56551b6d8b6dcco0&pid=Api'
-            tileURLs['http://upload.wikimedia.org/wikipedia/commons/d/d8/Gerichtsgebaeude_Bremen_1900.jpg']='https://tse2.mm.bing.net/th?id=OIP.M4dafd4aa1117f834788676bb99df9114o0&pid=Api'
-            tileURLs['http://biletim.de/Files/Images/Tours/bremen-gunluk-tur/1280x.jpg']='https://tse3.mm.bing.net/th?id=OIP.Me273056d5486ebd27eca54b975399d6ao0&pid=Api'
-            tileURLs['https://upload.wikimedia.org/wikipedia/commons/1/1b/Bremen-rathaus-dom-buergerschaft.jpg']='https://tse4.mm.bing.net/th?id=OIP.Mbce7a8627d794f96f0210c4ff2ca0719o0&pid=Api'
-            tileURLs['http://www.big-bremen.de/sixcms/media.php/52/marktplatz_kontorhaus.jpg']='https://tse1.mm.bing.net/th?id=OIP.M92662810bc4c363b970e7ff6aa062a72o0&pid=Api'
+
+            tileURLs = image2emotion(imageData)
             template = Template(FORM)
             print("ll")
             response = template.render(description="your face", tile_urls=tileURLs)
