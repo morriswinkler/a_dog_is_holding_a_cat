@@ -1,16 +1,10 @@
 from __future__ import print_function
 import time
 import requests
-import os
-import re
 from jinja2 import Template
-
-import urllib
-
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import cgi
-
-
+import operator
 
 # Variables
 
@@ -22,6 +16,8 @@ _searchURL = 'https://bingapis.azure-api.net/api/v5/search/'
 _searchKey = 'facce9ec59db43ac80f9d28f3627a32f'
 
 _spotifyURL = 'https://api.spotify.com/v1/search'
+
+_loklakURL = 'http://loklak-server-ansi-1659.mybluemix.net/api/search.json'
 
 def processRequest(json, data, headers, params):
     """
@@ -170,7 +166,30 @@ def image2song(urlImage):
     else:
         return "no song found", imageDescription
 
+def getTextForEmotion(emotion):
 
+    params  = {'q' : emotion, 'count': 1000}
+    headers = dict()
+
+    result = processRequestGet(_loklakURL, headers, params )
+
+    hashtags = {}
+
+    for tweet in result['statuses']:
+        if int(tweet['hashtags_count']) > 0:
+            for hash in tweet['hashtags']:
+                if hash in hashtags:
+                    hashtags[hash] = hashtags[hash]+1
+                else:
+                    hashtags[hash] = 1
+
+    sorted_hashtags = sorted(hashtags.items(), key=operator.itemgetter(1), reverse=True)
+
+    resultstring = ""
+    for hash in sorted_hashtags[1:10]:
+        resultstring = resultstring + " " + hash[0]
+
+    return resultstring.strip()
 
 class StoreHandler(BaseHTTPRequestHandler):
     def do_POST(self):
