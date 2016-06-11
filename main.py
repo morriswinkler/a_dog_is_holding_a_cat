@@ -1,25 +1,23 @@
 from __future__ import print_function
 import time
 import requests
-from jinja2 import Template
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import cgi
 import operator
+import urllib
+from jinja2 import Template
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 # Variables
-
-_url = 'https://api.projectoxford.ai/vision/v1.0/describe'
-_key = '4474334ed4334446a378111e40e1d156' #Here you have to paste your primary key
+_url           = 'https://api.projectoxford.ai/vision/v1.0/describe'
+_key           = '4474334ed4334446a378111e40e1d156' #Here you have to paste your primary key
 _maxNumRetries = 10
+_searchURL     = 'https://bingapis.azure-api.net/api/v5/search/'
+_bingURL       = 'https://bingapis.azure-api.net/api/v5/images/search'
+_searchKey     = 'facce9ec59db43ac80f9d28f3627a32f'
+_spotifyURL    = 'https://api.spotify.com/v1/search'
+_loklakURL     = 'http://loklak-server-ansi-1659.mybluemix.net/api/search.json'
 
-_searchURL = 'https://bingapis.azure-api.net/api/v5/search/'
-_searchKey = 'facce9ec59db43ac80f9d28f3627a32f'
-
-_spotifyURL = 'https://api.spotify.com/v1/search'
-
-_loklakURL = 'http://loklak-server-ansi-1659.mybluemix.net/api/search.json'
-
-def processRequest(json, data, headers, params):
+def processRequest(url, json, data, headers, params):
     """
     Helper function to process the request to Project Oxford
 
@@ -34,7 +32,7 @@ def processRequest(json, data, headers, params):
 
     while True:
 
-        response = requests.request('post', _url, json=json, data=data, headers=headers, params=params)
+        response = requests.request('post', url, json=json, data=data, headers=headers, params=params)
 
         if response.status_code == 429:
 
@@ -128,7 +126,7 @@ def image2song(urlImage):
     json = { 'url': urlImage }
     data = None
 
-    result = processRequest( json, data, headers, params )
+    result = processRequest(_url, json, data, headers, params )
 
     #print(result['description']['captions'][0]['text'])
 
@@ -190,6 +188,34 @@ def getTextForEmotion(emotion):
         resultstring = resultstring + " " + hash[0]
 
     return resultstring.strip()
+
+def getImages(queryString):
+
+    """
+
+    :param queryString:
+    :return:
+
+    Important parts:
+    contentUrl : URL to the real image
+    thumbnailUrl : thumpnail
+    width: original image
+    height: original image
+    thumbnail/width
+    thumbnail/height
+    accentColor
+    """
+
+    params = { "q" : queryString, "count": 15, "ImageType": "Photo", "SafeSearch": "Off"}
+    headers = dict()
+    headers['Ocp-Apim-Subscription-Key'] = _searchKey
+    headers['Content-Type'] = 'application/json'
+
+    result = processRequestGet(_bingURL, headers, params )
+
+    imageresults = {}
+
+    return result['value']
 
 class StoreHandler(BaseHTTPRequestHandler):
     def do_POST(self):
