@@ -39,7 +39,11 @@ def processRequest(url, json, data, headers, params):
     retries = 0
     result = None
 
+    print(data)
+
     while True:
+
+
 
         response = requests.request('post', url, json=json, data=data, headers=headers, params=params)
 
