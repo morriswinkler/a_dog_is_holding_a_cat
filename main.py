@@ -245,7 +245,7 @@ def image2emotion(imageData):
 
         print(querytext)
 
-        images = getImages("bremen")
+        images = getImages(querytext)
 
         if len(images) > 0:
             tileURLs = {}
