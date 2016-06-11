@@ -10,8 +10,19 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 #DEMO
 #  http://cdn2.spiegel.de/images/image-244991-galleryV9-xddn-244991.jpg (Bridge over troubled water)
-#
-
+#  http://i.imgur.com/heNo487.gif (a cell phone)
+#  http://static6.businessinsider.com/image/520e7783eab8ea6f27000005/19-crazy-facts-about-bill-gates-123-million-washington-mansion.jpg (a man standing next to a river)
+#  http://cdn.myanimelist.net/s/common/uploaded_files/1442478345-62306817af75fc68668e481bd50bb8f3.jpeg (a group of people posing for a picture)
+#  http://cdn2.spiegel.de/images/image-244991-galleryV9-xddn-244991.jpg (a bridge over water)
+#  http://i.telegraph.co.uk/multimedia/archive/01579/steve-ballmer_1579144c.jpg (Steve Ballmer in a suit and tie)
+#  https://cdn1.wtvox.com/wp-content/uploads/2015/08/IoT-in-shops-and-retail.jpg (a man standing in a store)
+#  http://neoproto.net/wp-content/gallery/c-base_fotosession_25-oct-2008/c-base_fotosession_25-oct-2008-4.jpg (a man and woman cutting a cake)
+#  http://www.gruenderszene.de/wp-content/uploads/2015/02/IMG_6337.jpg (a group of people are looking at a dog)
+#  http://nerdist.com/wp-content/uploads/2015/11/WarcraftFeat.jpg (a man holding a cell phone)
+#  http://dasottili.designblog.de/images/kunde/Aktuell/Regen_040811_bremen_parkstrasse.jpg (a river with a bridge in the rain)
+#  http://image2-cdn.n24.de/image/730752/1/large16x9/e1u/bremen-test-gegen-west-ham-faellt-regen-zum-opfer-image_620x349.jpg  (a man holding a tennis racket)
+#  http://cl.jroo.me/z3/z/-/v/e/a.baa-Man-Like-Fish-Or-Fish-Like-M.jpg (a smiling man wearing a hat)
+#  http://media.irishcentral.com/images/Preacher-Bible-MI.jpg (a man holding a laptop)
 
 # Variables
 _url           = 'https://api.projectoxford.ai/vision/v1.0/describe'
@@ -133,8 +144,11 @@ def image2song(urlImage):
     headers['Ocp-Apim-Subscription-Key'] = _key
     headers['Content-Type'] = 'application/json'
 
+
+
     json = { 'url': urlImage }
     data = None
+
 
     result = processRequest(_url, json, data, headers, params )
 
@@ -149,7 +163,7 @@ def image2song(urlImage):
 
     result = processRequestGet(_searchURL, headers, params )
 
-    #print(result["webPages"]['value'][0])
+    #print(result["webPages"]['value'][0]['name'])
 
     songresult = result["webPages"]['value'][0]['name']
     #print(songresult)
@@ -158,7 +172,9 @@ def image2song(urlImage):
 
     #print(songresult)
 
-    songresult = urllib.quote_plus(songresult)
+    #songresult = urllib.quote_plus(songresult)
+
+    print(songresult)
 
     headers = dict()
     params = { 'q' : songresult, 'type' : 'track'}
