@@ -235,19 +235,24 @@ def image2emotion(imageData):
 
     result = processRequest(_emotionURL, json, data, headers, params)
 
-    print(result[0]['scores'])
+    if len(result) > 0:
 
-    querytext = getTextForEmotion(result[0]['scores'])
-    print(querytext)
+        print(result[0]['scores'])
 
-    images = getImages("Bremen")
+        querytext = getTextForEmotion(result[0]['scores'])
 
-    tileURLs = {}
+        print(querytext)
 
-    for image in images:
-        tileURLs[image['contentUrl']] = image['thumbnailUrl']
+        images = getImages(querytext)
 
-    print(tileURLs)
+        tileURLs = {}
+
+        for image in images:
+            tileURLs[image['contentUrl']] = image['thumbnailUrl']
+
+        print(tileURLs)
+    else:
+        tileURLs = "bad face"
 
     return tileURLs
 
@@ -281,7 +286,6 @@ class StoreHandler(BaseHTTPRequestHandler):
 
             tileURLs = image2emotion(imageData)
             template = Template(FORM)
-            print("ll")
             response = template.render(description="your face", tile_urls=tileURLs)
 
         self.respond(response)
@@ -336,21 +340,28 @@ FORM = """
                 <img id="startImg" src="{{ image_url }}" class="img-rounded" width="auto" height="400px">
             {% elif tile_urls %}
 
-                {% for tile in tile_urls %}
+                {% if tile_urls == "bad face" %}
 
-                    {% if loop.index == 1 or loop.index == 4 or loop.index == 7 %}
-                        <div class="row" style="padding-bottom: 10px;">
-                    {% endif %}
+                    <h3> could not detect face, try again </h3>
+                {% else %}
 
-                    <div class="col-md-4">
-                    <img src="{{ tile_urls[tile] }}" width="100%" height="120px">
-                    </div>
+                    {% for tile in tile_urls %}
 
-                    {% if loop.index == 3 or loop.index == 6 or loop.index == 9 %}
+                        {% if loop.index == 1 or loop.index == 4 or loop.index == 7 %}
+                            <div class="row" style="padding-bottom: 10px;">
+                        {% endif %}
+
+                        <div class="col-md-4">
+                        <img src="{{ tile_urls[tile] }}" width="100%" height="120px">
                         </div>
-                    {% endif %}
 
-                {% endfor %}
+                        {% if loop.index == 3 or loop.index == 6 or loop.index == 9 %}
+                            </div>
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% endif %}
 
             {% else %}
                 <img id="startImg" src="https://i.imgur.com/HqtEkEl.gif" class="img-rounded" width="auto" height="400px">
