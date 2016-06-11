@@ -174,7 +174,7 @@ def image2song(urlImage):
 
     #songresult = urllib.quote_plus(songresult)
 
-    print(songresult)
+    #print(songresult)
 
     headers = dict()
     params = { 'q' : songresult, 'type' : 'track'}
