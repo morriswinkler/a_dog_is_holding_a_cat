@@ -140,7 +140,7 @@ def image2song(urlImage):
 
     imageDescription = result['description']['captions'][0]['text']
 
-    params = { 'q' : 'site:azlyrics.com '+imageDescription + ' lyrics'}
+    params = { 'q' : 'site:azlyrics.com '+imageDescription}
 
     headers = dict()
     headers['Ocp-Apim-Subscription-Key'] = _searchKey
@@ -193,10 +193,10 @@ def getTextForEmotion(emotionlist):
     sorted_hashtags = sorted(hashtags.items(), key=operator.itemgetter(1), reverse=True)
 
     resultstring = ""
-    for hash in sorted_hashtags[1:4]:
-        resultstring = resultstring + " " + hash[0]
+    for hash in sorted_hashtags[1:5]:
+        resultstring = resultstring + " OR " + hash[0]
 
-    return resultstring.strip()
+    return resultstring.strip()[3:]
 
 def getImages(queryString):
 
