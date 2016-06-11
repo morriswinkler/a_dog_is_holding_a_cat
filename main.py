@@ -5,6 +5,7 @@ import cgi
 import operator
 import urllib
 from jinja2 import Template
+import base64
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 # Variables
@@ -16,6 +17,9 @@ _bingURL       = 'https://bingapis.azure-api.net/api/v5/images/search'
 _searchKey     = 'facce9ec59db43ac80f9d28f3627a32f'
 _spotifyURL    = 'https://api.spotify.com/v1/search'
 _loklakURL     = 'http://loklak-server-ansi-1659.mybluemix.net/api/search.json'
+_emotionURL = 'https://api.projectoxford.ai/emotion/v1.0/recognize'
+_emotionKey = '4e8633eccc0f46b5b8abb49f379a5e96'
+_spotifyURL = 'https://api.spotify.com/v1/search'
 
 def processRequest(url, json, data, headers, params):
     """
@@ -128,6 +132,7 @@ def image2song(urlImage):
 
     result = processRequest(_url, json, data, headers, params )
 
+
     #print(result['description']['captions'][0]['text'])
 
     imageDescription = result['description']['captions'][0]['text']
@@ -215,7 +220,24 @@ def getImages(queryString):
 
     imageresults = {}
 
+
     return result['value']
+
+def image2emotion(imageData):
+    params = {'maxCandidates': '1'}
+
+    headers = dict()
+    headers['Ocp-Apim-Subscription-Key'] = _emotionKey
+    headers['Content-Type'] = 'application/octet-stream'
+
+    json = ""
+    data = imageData
+
+    result = processRequest(_emotionURL, json, data, headers, params)
+
+    print(result[0]['scores'])
+
+
 
 class StoreHandler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -225,15 +247,27 @@ class StoreHandler(BaseHTTPRequestHandler):
             environ={'REQUEST_METHOD': 'POST',
                      'CONTENT_TYPE': self.headers['Content-Type'],
                      })
-        imageURL = form['imageURL'].value
 
-        res, desc = image2song(imageURL)
+        try:
+            imageURL = form['imageURL'].value
+        except:
+            imageURL = None
+        try:
+            imageData = form['imageData'].value
+            decImageData = base64.b64decode(imageData)
 
-        #self.respond("uploaded %s, thanks" % res)
-        #self.redirect(res)
+        except:
+            imageData = None
 
-        template = Template(FORM)
-        response = template.render(description=desc, song_url=res, image_url=imageURL)
+        response = "ok"
+
+        if imageURL:
+            res, desc = image2song(imageURL)
+            template = Template(FORM)
+            response = template.render(description=desc, song_url=res, image_url=imageURL)
+
+        if imageData:
+            res = image2emotion(decImageData)
 
         self.respond(response)
 
@@ -330,6 +364,10 @@ FORM = """
                         //$('#canvas').height(400);
                         $('#canvas').show();
                         context.drawImage(video, 0, 0, 533, 400);
+
+                        var canvasData = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
+
+                        $.post($(location).attr('href'), { imageData: canvasData})
 
                 });
                 }, false);
