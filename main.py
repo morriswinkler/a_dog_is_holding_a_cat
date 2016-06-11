@@ -98,7 +98,6 @@ def processRequestGet(url, headers, params):
 
         elif response.status_code == 200 or response.status_code == 201:
 
-
             if 'content-length' in response.headers and int(response.headers['content-length']) == 0:
                 result = None
             elif 'content-type' in response.headers and isinstance(response.headers['content-type'], str):
@@ -132,7 +131,6 @@ def image2song(urlImage):
 
     result = processRequest(_url, json, data, headers, params )
 
-
     #print(result['description']['captions'][0]['text'])
 
     imageDescription = result['description']['captions'][0]['text']
@@ -153,7 +151,6 @@ def image2song(urlImage):
 
     #print(songresult)
 
-
     songresult = urllib.quote_plus(songresult)
 
     headers = dict()
@@ -173,7 +170,7 @@ def getTextForEmotion(emotionlist):
 
     sorted_emotion = sorted(emotionlist.items(), key=operator.itemgetter(1), reverse=True)
 
-    params  = {'q' : sorted_emotion[0][0], 'count': 1000}
+    params  = {'q' : sorted_emotion[0][0], 'count': 2000}
     headers = dict()
 
     result = processRequestGet(_loklakURL, headers, params )
@@ -191,7 +188,7 @@ def getTextForEmotion(emotionlist):
     sorted_hashtags = sorted(hashtags.items(), key=operator.itemgetter(1), reverse=True)
 
     resultstring = ""
-    for hash in sorted_hashtags[1:10]:
+    for hash in sorted_hashtags[1:4]:
         resultstring = resultstring + " " + hash[0]
 
     return resultstring.strip()
@@ -245,12 +242,17 @@ def image2emotion(imageData):
 
         images = getImages(querytext)
 
-        tileURLs = {}
+        if len(images) > 0:
+            tileURLs = {}
 
-        for image in images:
-            tileURLs[image['contentUrl']] = image['thumbnailUrl']
+            for image in images:
+                tileURLs[image['contentUrl']] = image['thumbnailUrl']
 
-        print(tileURLs)
+            print(tileURLs)
+
+        else:
+            tileURLs = "No Images found"
+
     else:
         tileURLs = "bad face"
 
@@ -308,8 +310,6 @@ class StoreHandler(BaseHTTPRequestHandler):
         self.send_response(302)
         self.send_header("Location", url)
         self.end_headers()
-
-
 
 FORM = """
             <html>
