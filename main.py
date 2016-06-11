@@ -318,10 +318,12 @@ FORM = """
 
             <div class="col-md-6" style="text-align:center">
             {% if image_url %}
-            <img src="{{ image_url }}" class="img-rounded" width="auto" height="400px">
+            <img id="startImg" src="{{ image_url }}" class="img-rounded" width="auto" height="400px">
             {% else %}
 
-            <img id="startImg" src="https://i.imgur.com/HqtEkEl.gif" class="img-rounded" width="auto" height="400px">
+                <img id="startImg" src="https://i.imgur.com/HqtEkEl.gif" class="img-rounded" width="auto" height="400px">
+            {% endif %}
+
             <canvas id="canvas" width="533px" height="400px" style="display: none;"></canvas>
             <video id="video" width="auto" height="400px" autoplay="" style="display: none;"></video>
 
@@ -390,10 +392,6 @@ FORM = """
 
                 </script>
 
-
-
-            <!-- img src="https://i.imgur.com/HqtEkEl.gif" class="img-rounded" width="auto" height="400px" -->
-            {% endif %}
             </div>
 
 
