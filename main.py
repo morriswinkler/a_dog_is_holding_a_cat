@@ -255,7 +255,6 @@ def image2emotion(imageData):
             for image in images:
                 tileURLs[image['contentUrl']] = image['thumbnailUrl']
 
-            print(tileURLs)
 
         else:
             tileURLs = "No Images found"
