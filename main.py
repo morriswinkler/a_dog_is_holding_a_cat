@@ -8,6 +8,11 @@ from jinja2 import Template
 import base64
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
+#DEMO
+#  http://cdn2.spiegel.de/images/image-244991-galleryV9-xddn-244991.jpg (Bridge over troubled water)
+#
+
+
 # Variables
 _url           = 'https://api.projectoxford.ai/vision/v1.0/describe'
 _key           = '4474334ed4334446a378111e40e1d156' #Here you have to paste your primary key
@@ -232,7 +237,7 @@ def image2emotion(imageData):
 
     result = processRequest(_emotionURL, json, data, headers, params)
 
-    if len(result) > 0:
+    if result == None or len(result) > 0:
 
         print(result[0]['scores'])
 
