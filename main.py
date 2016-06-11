@@ -6,6 +6,7 @@ import re
 from jinja2 import Template
 
 import urllib
+import base64
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import cgi
@@ -21,9 +22,12 @@ _maxNumRetries = 10
 _searchURL = 'https://bingapis.azure-api.net/api/v5/search/'
 _searchKey = 'facce9ec59db43ac80f9d28f3627a32f'
 
+_emotionURL = 'https://api.projectoxford.ai/emotion/v1.0/recognize'
+_emotionKey = '4e8633eccc0f46b5b8abb49f379a5e96'
+
 _spotifyURL = 'https://api.spotify.com/v1/search'
 
-def processRequest(json, data, headers, params):
+def processRequest(url, json, data, headers, params):
     """
     Helper function to process the request to Project Oxford
 
@@ -38,7 +42,7 @@ def processRequest(json, data, headers, params):
 
     while True:
 
-        response = requests.request('post', _url, json=json, data=data, headers=headers, params=params)
+        response = requests.request('post', url, json=json, data=data, headers=headers, params=params)
 
         if response.status_code == 429:
 
@@ -132,7 +136,7 @@ def image2song(urlImage):
     json = { 'url': urlImage }
     data = None
 
-    result = processRequest( json, data, headers, params )
+    result = processRequest( _url, json, data, headers, params )
 
     #print(result['description']['captions'][0]['text'])
 
@@ -171,6 +175,20 @@ def image2song(urlImage):
         return "no song found", imageDescription
 
 
+def image2emotion(imageData):
+    params = {'maxCandidates': '1'}
+
+    headers = dict()
+    headers['Ocp-Apim-Subscription-Key'] = _emotionKey
+    headers['Content-Type'] = 'application/octet-stream'
+
+    json = ""
+    data = imageData
+
+    result = processRequest(_emotionURL, json, data, headers, params)
+
+    print(result[0]['scores'])
+
 
 class StoreHandler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -180,15 +198,27 @@ class StoreHandler(BaseHTTPRequestHandler):
             environ={'REQUEST_METHOD': 'POST',
                      'CONTENT_TYPE': self.headers['Content-Type'],
                      })
-        imageURL = form['imageURL'].value
 
-        res, desc = image2song(imageURL)
+        try:
+            imageURL = form['imageURL'].value
+        except:
+            imageURL = None
+        try:
+            imageData = form['imageData'].value
+            decImageData = base64.b64decode(imageData)
 
-        #self.respond("uploaded %s, thanks" % res)
-        #self.redirect(res)
+        except:
+            imageData = None
 
-        template = Template(FORM)
-        response = template.render(description=desc, song_url=res, image_url=imageURL)
+        response = "ok"
+
+        if imageURL:
+            res, desc = image2song(imageURL)
+            template = Template(FORM)
+            response = template.render(description=desc, song_url=res, image_url=imageURL)
+
+        if imageData:
+            res = image2emotion(decImageData)
 
         self.respond(response)
 
@@ -285,6 +315,10 @@ FORM = """
                         //$('#canvas').height(400);
                         $('#canvas').show();
                         context.drawImage(video, 0, 0, 533, 400);
+
+                        var canvasData = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
+
+                        $.post($(location).attr('href'), { imageData: canvasData})
 
                 });
                 }, false);
