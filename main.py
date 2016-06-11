@@ -8,6 +8,11 @@ from jinja2 import Template
 import base64
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
+#DEMO
+#  http://cdn2.spiegel.de/images/image-244991-galleryV9-xddn-244991.jpg (Bridge over troubled water)
+#
+
+
 # Variables
 _url           = 'https://api.projectoxford.ai/vision/v1.0/describe'
 _key           = '4474334ed4334446a378111e40e1d156' #Here you have to paste your primary key
@@ -98,7 +103,6 @@ def processRequestGet(url, headers, params):
 
         elif response.status_code == 200 or response.status_code == 201:
 
-
             if 'content-length' in response.headers and int(response.headers['content-length']) == 0:
                 result = None
             elif 'content-type' in response.headers and isinstance(response.headers['content-type'], str):
@@ -132,12 +136,11 @@ def image2song(urlImage):
 
     result = processRequest(_url, json, data, headers, params )
 
-
     #print(result['description']['captions'][0]['text'])
 
     imageDescription = result['description']['captions'][0]['text']
 
-    params = { 'q' : 'site:azlyrics.com '+imageDescription + ' lyrics'}
+    params = { 'q' : 'site:azlyrics.com '+imageDescription}
 
     headers = dict()
     headers['Ocp-Apim-Subscription-Key'] = _searchKey
@@ -152,7 +155,6 @@ def image2song(urlImage):
     songresult = songresult.split('-')[1]
 
     #print(songresult)
-
 
     songresult = urllib.quote_plus(songresult)
 
@@ -173,7 +175,7 @@ def getTextForEmotion(emotionlist):
 
     sorted_emotion = sorted(emotionlist.items(), key=operator.itemgetter(1), reverse=True)
 
-    params  = {'q' : sorted_emotion[0][0], 'count': 1000}
+    params  = {'q' : sorted_emotion[0][0], 'count': 2000}
     headers = dict()
 
     result = processRequestGet(_loklakURL, headers, params )
@@ -191,10 +193,10 @@ def getTextForEmotion(emotionlist):
     sorted_hashtags = sorted(hashtags.items(), key=operator.itemgetter(1), reverse=True)
 
     resultstring = ""
-    for hash in sorted_hashtags[1:10]:
-        resultstring = resultstring + " " + hash[0]
+    for hash in sorted_hashtags[1:5]:
+        resultstring = resultstring + " OR " + hash[0]
 
-    return resultstring.strip()
+    return resultstring.strip()[3:]
 
 def getImages(queryString):
 
@@ -235,7 +237,7 @@ def image2emotion(imageData):
 
     result = processRequest(_emotionURL, json, data, headers, params)
 
-    if len(result) > 0:
+    if result != None and len(result) > 0:
 
         print(result[0]['scores'])
 
@@ -245,12 +247,17 @@ def image2emotion(imageData):
 
         images = getImages("bremen")
 
-        tileURLs = {}
+        if len(images) > 0:
+            tileURLs = {}
 
-        for image in images:
-            tileURLs[image['contentUrl']] = image['thumbnailUrl']
+            for image in images:
+                tileURLs[image['contentUrl']] = image['thumbnailUrl']
 
-        print(tileURLs)
+            print(tileURLs)
+
+        else:
+            tileURLs = "No Images found"
+
     else:
         tileURLs = "bad face"
 
@@ -308,8 +315,6 @@ class StoreHandler(BaseHTTPRequestHandler):
         self.send_response(302)
         self.send_header("Location", url)
         self.end_headers()
-
-
 
 FORM = """
             <html>
