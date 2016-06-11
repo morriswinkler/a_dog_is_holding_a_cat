@@ -318,9 +318,21 @@ FORM = """
 
             <div class="col-md-6" style="text-align:center">
             {% if image_url %}
-            <img id="startImg" src="{{ image_url }}" class="img-rounded" width="auto" height="400px">
-            {% else %}
+                <img id="startImg" src="{{ image_url }}" class="img-rounded" width="auto" height="400px">
+            {% else if tile_url%}
+                {% for tile in tiles_url %}
 
+                {%% if loop.index == 1 or loop.index == 4 or loop.index == 7 }
+                <div class="row">
+                {% endif %}
+
+
+                {%% if loop.index == 1 or loop.index == 4 or loop.index == 7 }
+                </div>
+                {% endif %}
+
+                {% endfor %}
+            {% else %}
                 <img id="startImg" src="https://i.imgur.com/HqtEkEl.gif" class="img-rounded" width="auto" height="400px">
             {% endif %}
 
