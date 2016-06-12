@@ -8,6 +8,10 @@ from jinja2 import Template
 import base64
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import random
+import time
+import uuid
+import os
+import json
 
 # DEMO
 
@@ -48,7 +52,7 @@ _emotionURL = 'https://api.projectoxford.ai/emotion/v1.0/recognize'
 _emotionKey = '4e8633eccc0f46b5b8abb49f379a5e96'
 _spotifyURL = 'https://api.spotify.com/v1/search'
 
-def processRequest(url, json, data, headers, params):
+def processRequest(url, jsonData, data, headers, params):
     """
     Helper function to process the request to Project Oxford
 
@@ -65,7 +69,7 @@ def processRequest(url, json, data, headers, params):
 
 
 
-        response = requests.request('post', url, json=json, data=data, headers=headers, params=params)
+        response = requests.request('post', url, json=jsonData, data=data, headers=headers, params=params)
 
         if response.status_code == 429:
 
@@ -157,11 +161,11 @@ def image2song(urlImage):
 
 
 
-    json = { 'url': urlImage }
+    jsonData = { 'url': urlImage }
     data = None
 
 
-    result = processRequest(_url, json, data, headers, params )
+    result = processRequest(_url, jsonData, data, headers, params )
 
     #print(result['description']['captions'][0]['text'])
 
@@ -208,7 +212,23 @@ def image2song(urlImage):
     if len(a['tracks']['items']) > 0:
         song_url = (a['tracks']['items'][0]['external_urls']['spotify'])
         print(song_url)
+
+        # write image to disk
+        dirname = "data/"
+        pngfilename = dirname + "image-" + time.strftime("%d_%m_%Y_%H_%M_%S") + "-" + str(uuid.uuid4()) + ".json"
+
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+
+        data = {'imageURL': urlImage, 'description': imageDescription, 'songURL': song_url}
+
+        fh = open(pngfilename, "wb")
+        json.dump(data, fh)
+        fh.close()
+
         return song_url, imageDescription
+
+
 
     else:
         return "no song found", imageDescription
@@ -283,6 +303,18 @@ def image2emotion(imageData):
 
     json = ""
     data = base64.b64decode(imageData)
+
+    # write image to disk
+    dirname = "data/"
+    pngfilename = dirname + "face-" + time.strftime("%d_%m_%Y_%H_%M_%S") + "-" + str(uuid.uuid4()) + ".png"
+
+    if not os.path.exists(dirname):
+        os.makedirs(dirname)
+
+    fh = open(pngfilename, "wb")
+    fh.write(data)
+    fh.close()
+
 
     result = processRequest(_emotionURL, json, data, headers, params)
 
