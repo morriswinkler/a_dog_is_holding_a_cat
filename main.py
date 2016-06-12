@@ -284,6 +284,7 @@ def image2emotion(imageData):
 
     else:
         tileURLs = "bad face"
+        desc     = "bad face"
 
     return desc, tileURLs
 
