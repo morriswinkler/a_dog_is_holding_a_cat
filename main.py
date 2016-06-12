@@ -382,7 +382,7 @@ FORM = """
 
             <div class="col-md-6" style="text-align:center">
             {% if image_url %}
-                <img id="startImg" src="{{ image_url }}" class="img-rounded" width="auto" height="400px">
+                <img id="startImg" src="{{ image_url }}" class="img-rounded" width="auto" height="500px">
             {% elif tile_urls %}
 
                 {% if tile_urls == "bad face" %}
@@ -393,12 +393,12 @@ FORM = """
                     {% for tile in tile_urls %}
 
                         {% if loop.index == 1 or loop.index == 4 or loop.index == 7 %}
-                            <div class="row" style="padding-bottom: 10px;">
+                            <div class="row" style="padding-bottom: 20px;">
                         {% endif %}
 
                         <div class="col-md-4">
                         <a href="javascript:DoPost{{ loop.index }}()">
-                        <img src="{{ tile_urls[tile] }}" width="100%" height="120px">
+                        <img src="{{ tile_urls[tile] }}" width="100%" height="150px">
                         </a>
                         </div>
 
@@ -422,11 +422,11 @@ FORM = """
                 {% endif %}
 
             {% else %}
-                <img id="startImg" src="https://i.imgur.com/HqtEkEl.gif" class="img-rounded" width="auto" height="400px">
+                <img id="startImg" src="https://i.imgur.com/HqtEkEl.gif" class="img-rounded" width="auto" height="500px">
             {% endif %}
 
-            <canvas id="canvas" width="533px" height="400px" style="display: none;"></canvas>
-            <video id="video" width="auto" height="400px" autoplay="" style="display: none;"></video>
+            <canvas id="canvas" width="666px" height="500px" style="display: none;"></canvas>
+            <video id="video" width="auto" height="500px" autoplay="" style="display: none;"></video>
 
 
 
@@ -481,9 +481,9 @@ FORM = """
 
                                 $('#video').hide();
                                 //$('#canvas').width($('#video').width());
-                                //$('#canvas').height(400);
+                                //$('#canvas').height(666);
                                 $('#canvas').show();
-                                context.drawImage(video, 0, 0, 533, 400);
+                                context.drawImage(video, 0, 0, 666, 500);
 
                                 var canvasData = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
 
@@ -523,12 +523,12 @@ FORM = """
                         try an other image
                     </h3>
                 {% else %}
-                <iframe src="{{ song_url }}" style="width:100%; height:400px">
+                <iframe src="{{ song_url }}" style="width:100%; height:500px">
                 </iframe>
                 {% endif %}
 
             {% else %}
-                <iframe src="https://open.spotify.com/track/0MdMNWw0rpBjQJ4SwQ0qbg" style="width:100%; height:400px">
+                <iframe src="https://open.spotify.com/track/0MdMNWw0rpBjQJ4SwQ0qbg" style="width:100%; height:500px">
                 </iframe>
 
             {% endif %}
@@ -548,9 +548,9 @@ FORM = """
 
                         <h5>This image can be described as:</h5>
                         {% if image_url or tile_urls %}
-                        <h4 style="text-align:center"> "{{ description }}" </h4>
+                        <h3 style="text-align:center"> "{{ description }}" </h3>
                         {% else %}
-                        <h4 style="text-align:center"> "a picture of herself in a mirror" </h4>
+                        <h3 style="text-align:center"> "a picture of herself in a mirror" </h3>
                         {% endif %}
 
                     </div>
