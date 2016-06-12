@@ -176,7 +176,12 @@ def image2song(urlImage):
     songresult = result["webPages"]['value'][0]['name']
     #print(songresult)
 
-    songresult = songresult.split('-')[1]
+    if songresult != None:
+        split = songresult.split('-')
+        if len(split) > 1:
+            splittedsong = split[1]
+        else:
+            splittedsong = songresult
 
     #print(songresult)
 
@@ -185,7 +190,7 @@ def image2song(urlImage):
     #print(songresult)
 
     headers = dict()
-    params = { 'q' : songresult, 'type' : 'track'}
+    params = { 'q' : splittedsong, 'type' : 'track'}
 
     a =  processRequestGet(_spotifyURL, headers, params )
 
