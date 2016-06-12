@@ -29,6 +29,7 @@ demo = [
         'http://blogs.mtlakes.org/entertainment/files/2014/01/michael-phelps-10.jpg', #(a woman holding a cake)
         'http://cdn.playbuzz.com/cdn/ac8737b9-3414-40fe-8c61-44cbd920f939/bf5aeb68-7542-4c4c-86a9-4e37bf19b63f.jpg', #(Matt Smith wearing a bow tie)
         'http://sumikai.com/wp-content/uploads/2014/09/tokyo-ghoul-16457-hd-background.jpg', #(a close up of a cell phone
+        'http://www.findyourtattoo.net/wp-content/uploads/2013/04/Bird-Foot-Tattoo.jpg', #(a close up of a person holding a cell phone)
         ]
 
 
@@ -586,6 +587,8 @@ FORM = """
                     Finaly we load the song through Spotify and present it to you, just login and press play to enjoy.
                     </p>
 
+                    <a rel="license" href="javascript:DoDemo()"><img class="pull-right" alt="Creative Commons License" style="border-width:0; width: 30px; margin-top: -15px;" src="http://mirrors.creativecommons.org/presskit/icons/cc.png" /></a>
+
                     </div>
 
                 </div>
@@ -603,6 +606,19 @@ FORM = """
             demo={{ demo }}
             {% endif %}
 
+            function DoDemo() {
+
+            for (var i = 1; i <= demo.length; i++) {
+                (function(index) {
+                    setTimeout(function() {
+
+                        $('body').load($(location).attr('href'), {imageURL:demo[index] });
+
+                    }, 10000 * (i-1));
+                })(i);
+            }
+
+            }
 
             </script>
 
