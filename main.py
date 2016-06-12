@@ -9,23 +9,28 @@ import base64
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import random
 
-#DEMO
-#  http://cdn2.spiegel.de/images/image-244991-galleryV9-xddn-244991.jpg (Bridge over troubled water)
-#  http://i.imgur.com/heNo487.gif (a cell phone)
-#  http://static6.businessinsider.com/image/520e7783eab8ea6f27000005/19-crazy-facts-about-bill-gates-123-million-washington-mansion.jpg (a man standing next to a river)
-#  http://cdn.myanimelist.net/s/common/uploaded_files/1442478345-62306817af75fc68668e481bd50bb8f3.jpeg (a group of people posing for a picture)
-#  http://cdn2.spiegel.de/images/image-244991-galleryV9-xddn-244991.jpg (a bridge over water)
-#  http://i.telegraph.co.uk/multimedia/archive/01579/steve-ballmer_1579144c.jpg (Steve Ballmer in a suit and tie)
-#  https://cdn1.wtvox.com/wp-content/uploads/2015/08/IoT-in-shops-and-retail.jpg (a man standing in a store)
-#  http://neoproto.net/wp-content/gallery/c-base_fotosession_25-oct-2008/c-base_fotosession_25-oct-2008-4.jpg (a man and woman cutting a cake)
-#  http://www.gruenderszene.de/wp-content/uploads/2015/02/IMG_6337.jpg (a group of people are looking at a dog)
-#  http://nerdist.com/wp-content/uploads/2015/11/WarcraftFeat.jpg (a man holding a cell phone)
-#  http://dasottili.designblog.de/images/kunde/Aktuell/Regen_040811_bremen_parkstrasse.jpg (a river with a bridge in the rain)
-#  http://image2-cdn.n24.de/image/730752/1/large16x9/e1u/bremen-test-gegen-west-ham-faellt-regen-zum-opfer-image_620x349.jpg  (a man holding a tennis racket)
-#  http://cl.jroo.me/z3/z/-/v/e/a.baa-Man-Like-Fish-Or-Fish-Like-M.jpg (a smiling man wearing a hat)
-#  http://media.irishcentral.com/images/Preacher-Bible-MI.jpg (a man holding a laptop)
-#  http://blogs.mtlakes.org/entertainment/files/2014/01/michael-phelps-10.jpg (a woman holding a cake)
-#  http://cdn.playbuzz.com/cdn/ac8737b9-3414-40fe-8c61-44cbd920f939/bf5aeb68-7542-4c4c-86a9-4e37bf19b63f.jpg ( http://cdn.playbuzz.com/cdn/ac8737b9-3414-40fe-8c61-44cbd920f939/bf5aeb68-7542-4c4c-86a9-4e37bf19b63f.jpg)
+# DEMO
+
+demo = [
+        'http://cdn2.spiegel.de/images/image-244991-galleryV9-xddn-244991.jpg', # (Bridge over troubled water)
+        'http://i.imgur.com/heNo487.gif', # (a cell phone)
+        'http://static6.businessinsider.com/image/520e7783eab8ea6f27000005/19-crazy-facts-about-bill-gates-123-million-washington-mansion.jpg', #(a man standing next to a river)
+        'http://cdn.myanimelist.net/s/common/uploaded_files/1442478345-62306817af75fc68668e481bd50bb8f3.jpeg', # (a group of people posing for a picture)
+        'http://cdn2.spiegel.de/images/image-244991-galleryV9-xddn-244991.jpg', #(a bridge over water)
+        'http://i.telegraph.co.uk/multimedia/archive/01579/steve-ballmer_1579144c.jpg', #(Steve Ballmer in a suit and tie)
+        'https://cdn1.wtvox.com/wp-content/uploads/2015/08/IoT-in-shops-and-retail.jpg',  #(a man standing in a store)
+        'http://neoproto.net/wp-content/gallery/c-base_fotosession_25-oct-2008/c-base_fotosession_25-oct-2008-4.jpg', #(a man and woman cutting a cake)
+        'http://www.gruenderszene.de/wp-content/uploads/2015/02/IMG_6337.jpg', #(a group of people are looking at a dog)
+        'http://nerdist.com/wp-content/uploads/2015/11/WarcraftFeat.jpg', #(a man holding a cell phone)
+        'http://dasottili.designblog.de/images/kunde/Aktuell/Regen_040811_bremen_parkstrasse.jpg', #(a river with a bridge in the rain)
+        'http://image2-cdn.n24.de/image/730752/1/large16x9/e1u/bremen-test-gegen-west-ham-faellt-regen-zum-opfer-image_620x349.jpg', #(a man holding a tennis racket)
+        'http://cl.jroo.me/z3/z/-/v/e/a.baa-Man-Like-Fish-Or-Fish-Like-M.jpg',  #(a smiling man wearing a hat)
+        'http://media.irishcentral.com/images/Preacher-Bible-MI.jpg', #(a man holding a laptop)
+        'http://blogs.mtlakes.org/entertainment/files/2014/01/michael-phelps-10.jpg', #(a woman holding a cake)
+        'http://cdn.playbuzz.com/cdn/ac8737b9-3414-40fe-8c61-44cbd920f939/bf5aeb68-7542-4c4c-86a9-4e37bf19b63f.jpg', #(Matt Smith wearing a bow tie)
+        'http://sumikai.com/wp-content/uploads/2014/09/tokyo-ghoul-16457-hd-background.jpg', #(a close up of a cell phone
+        ]
+
 
 # Variables
 _url           = 'https://api.projectoxford.ai/vision/v1.0/describe'
@@ -313,20 +318,20 @@ class StoreHandler(BaseHTTPRequestHandler):
         if imageURL:
             res, desc = image2song(imageURL)
             template = Template(FORM)
-            response = template.render(description=desc, song_url=res, image_url=imageURL)
+            response = template.render(demo=demo, description=desc, song_url=res, image_url=imageURL)
 
         if imageData:
 
             desc, tileURLs = image2emotion(imageData)
             template = Template(FORM)
-            response = template.render(description=desc, tile_urls=tileURLs)
+            response = template.render(demo=demo, description=desc, tile_urls=tileURLs)
 
         self.respond(response)
 
     def do_GET(self):
 
         template = Template(FORM)
-        response = template.render()
+        response = template.render(demo=demo)
 
         self.respond(response)
 
@@ -592,6 +597,11 @@ FORM = """
             function DoCatPost(){
                 $('body').load($(location).attr('href'), {imageURL:"http://thumbs.dreamstime.com/z/cat-kitten-singing-microphone-white-background-37516747.jpg" });
             }
+
+            {% if demo %}
+            demo={{ demo }}
+            {% endif %}
+
 
             </script>
 
