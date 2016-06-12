@@ -242,7 +242,7 @@ def getImages(queryString):
     accentColor
     """
 
-    params = { "q" : queryString, "count": 9, "ImageType": "Photo", "SafeSearch": "Off"}
+    params = { "q" : queryString, "count": 9, "ImageType": "Photo", "SafeSearch": "Moderate"}
     headers = dict()
     headers['Ocp-Apim-Subscription-Key'] = _searchKey
     headers['Content-Type'] = 'application/json'
