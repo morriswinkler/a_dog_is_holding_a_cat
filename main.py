@@ -176,6 +176,14 @@ def image2song(urlImage):
 
     #print(result["webPages"]['value'][0]['name'])
 
+
+
+    try:
+        songresult = result["webPages"]['value'][0]['name']
+    except:
+        return "no song found", imageDescription
+
+
     songresult = result["webPages"]['value'][0]['name']
     #print(songresult)
 
