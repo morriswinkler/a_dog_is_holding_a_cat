@@ -29,7 +29,9 @@ demo = [
         'http://blogs.mtlakes.org/entertainment/files/2014/01/michael-phelps-10.jpg', #(a woman holding a cake)
         'http://cdn.playbuzz.com/cdn/ac8737b9-3414-40fe-8c61-44cbd920f939/bf5aeb68-7542-4c4c-86a9-4e37bf19b63f.jpg', #(Matt Smith wearing a bow tie)
         'http://sumikai.com/wp-content/uploads/2014/09/tokyo-ghoul-16457-hd-background.jpg', #(a close up of a cell phone
+        'http://bilder.augsburger-allgemeine.de/img/panorama/crop36603802/0824785757-ctopTeaser-w1200/Die-Queen-wird-90-und-ihr-ganzes-Koenigreich-feiert.jpg', #a man wearing a hat and glasses
         'http://www.findyourtattoo.net/wp-content/uploads/2013/04/Bird-Foot-Tattoo.jpg', #(a close up of a person holding a cell phone)
+        'http://www.bilder-hochladen.net/files/f8d-2k.jpg', #(a couple of giraffes that are next to a map)
         ]
 
 
