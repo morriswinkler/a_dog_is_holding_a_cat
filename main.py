@@ -24,6 +24,8 @@ import random
 #  http://image2-cdn.n24.de/image/730752/1/large16x9/e1u/bremen-test-gegen-west-ham-faellt-regen-zum-opfer-image_620x349.jpg  (a man holding a tennis racket)
 #  http://cl.jroo.me/z3/z/-/v/e/a.baa-Man-Like-Fish-Or-Fish-Like-M.jpg (a smiling man wearing a hat)
 #  http://media.irishcentral.com/images/Preacher-Bible-MI.jpg (a man holding a laptop)
+#  http://blogs.mtlakes.org/entertainment/files/2014/01/michael-phelps-10.jpg (a woman holding a cake)
+#  http://cdn.playbuzz.com/cdn/ac8737b9-3414-40fe-8c61-44cbd920f939/bf5aeb68-7542-4c4c-86a9-4e37bf19b63f.jpg ( http://cdn.playbuzz.com/cdn/ac8737b9-3414-40fe-8c61-44cbd920f939/bf5aeb68-7542-4c4c-86a9-4e37bf19b63f.jpg)
 
 # Variables
 _url           = 'https://api.projectoxford.ai/vision/v1.0/describe'
