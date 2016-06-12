@@ -29,7 +29,7 @@ _url           = 'https://api.projectoxford.ai/vision/v1.0/describe'
 _key           = '4474334ed4334446a378111e40e1d156' #Here you have to paste your primary key
 _maxNumRetries = 10
 _searchURL     = 'https://bingapis.azure-api.net/api/v5/search/'
-_bingURL       = 'https://bingapis.azure-api.net/api/v5/images/search'
+_bingURL       = 'https://bingapis.azure-api.net/api/v5/images/search/'
 _searchKey     = 'facce9ec59db43ac80f9d28f3627a32f'
 _spotifyURL    = 'https://api.spotify.com/v1/search'
 _loklakURL     = 'http://loklak-server-ansi-1659.mybluemix.net/api/search.json'
@@ -190,6 +190,8 @@ def image2song(urlImage):
         return "no song found", imageDescription
 
 def getTextForEmotion(emotionlist):
+
+    emotionlist['neutral'] = 0.0
 
     sorted_emotion = sorted(emotionlist.items(), key=operator.itemgetter(1), reverse=True)
 
