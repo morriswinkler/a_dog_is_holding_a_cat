@@ -282,7 +282,7 @@ def image2emotion(imageData):
     else:
         tileURLs = "bad face"
 
-    return tileURLs
+    return querytext, tileURLs
 
 class StoreHandler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -312,9 +312,9 @@ class StoreHandler(BaseHTTPRequestHandler):
 
         if imageData:
 
-            tileURLs = image2emotion(imageData)
+            desc, tileURLs = image2emotion(imageData)
             template = Template(FORM)
-            response = template.render(description="your face", tile_urls=tileURLs)
+            response = template.render(description=desc, tile_urls=tileURLs)
 
         self.respond(response)
 
