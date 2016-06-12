@@ -7,6 +7,7 @@ import urllib
 from jinja2 import Template
 import base64
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+import random
 
 #DEMO
 #  http://cdn2.spiegel.de/images/image-244991-galleryV9-xddn-244991.jpg (Bridge over troubled water)
@@ -213,7 +214,8 @@ def getTextForEmotion(emotionlist):
     sorted_hashtags = sorted(hashtags.items(), key=operator.itemgetter(1), reverse=True)
 
     resultstring = ""
-    for hash in sorted_hashtags[1:7]:
+    r = random.randint(3,12)
+    for hash in sorted_hashtags[1:r]:
         resultstring = resultstring + " OR " + hash[0]
 
     return resultstring.strip()[3:]
@@ -596,6 +598,7 @@ FORM = """
         """
 
 def main():
+    random.seed()
     try:
         server = HTTPServer(('', 8080), StoreHandler)
         print('started...')
