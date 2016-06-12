@@ -196,7 +196,9 @@ def getTextForEmotion(emotionlist):
 
     sorted_emotion = sorted(emotionlist.items(), key=operator.itemgetter(1), reverse=True)
 
-    params  = {'q' : sorted_emotion[0][0], 'count': 2000}
+    emotion = sorted_emotion[0][0]
+
+    params  = {'q' : emotion, 'count': 2000}
     headers = dict()
 
     result = processRequestGet(_loklakURL, headers, params )
@@ -213,12 +215,14 @@ def getTextForEmotion(emotionlist):
 
     sorted_hashtags = sorted(hashtags.items(), key=operator.itemgetter(1), reverse=True)
 
+    desc = emotion + "=>"
     resultstring = ""
     r = random.randint(3,12)
     for hash in sorted_hashtags[1:r]:
+        desc = desc + " " + hash[0] + ","
         resultstring = resultstring + " OR " + hash[0]
 
-    return resultstring.strip()[3:]
+    return desc[0:-1], resultstring.strip()[3:]
 
 def getImages(queryString):
 
@@ -263,7 +267,7 @@ def image2emotion(imageData):
 
         print(result[0]['scores'])
 
-        querytext = getTextForEmotion(result[0]['scores'])
+        desc, querytext = getTextForEmotion(result[0]['scores'])
 
         print(querytext)
 
@@ -275,14 +279,13 @@ def image2emotion(imageData):
             for image in images:
                 tileURLs[image['contentUrl']] = image['thumbnailUrl']
 
-
         else:
             tileURLs = "No Images found"
 
     else:
         tileURLs = "bad face"
 
-    return querytext, tileURLs
+    return desc, tileURLs
 
 class StoreHandler(BaseHTTPRequestHandler):
     def do_POST(self):
